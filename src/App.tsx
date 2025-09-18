@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Home as HomeIcon, Calendar as CalendarIcon, BarChart3 } from 'lucide-react'
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from '@/components/ui/navigation-menu'
 import Home from '@/components/Home'
 import Calendar from '@/components/Calendar'
 import Workout from '@/components/Workout'

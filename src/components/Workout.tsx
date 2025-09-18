@@ -75,12 +75,6 @@ export default function Workout({ workoutId, onBack, onCongratulations, onExerci
     }
   }
 
-  // This will be called from parent after exercise is saved
-  const refreshCompletedExercises = () => {
-    if (currentSession) {
-      setCompletedExercises(getCompletedExercises(currentSession.id))
-    }
-  }
 
   const handleCompleteWorkout = () => {
     if (currentSession) {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ArrowLeft, Plus, Trash2, Play, Lightbulb, Video, X } from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
+import { ArrowLeft, Plus, Trash2, Play, Video, X } from 'lucide-react'
 import {
   saveExerciseData,
   getExerciseData,
@@ -66,7 +66,7 @@ export default function ExerciseScreen({ exerciseName, session, onBack, onSave }
   const handleSaveExercise = () => {
     // Convert exercise sets to the correct format for storage
     const setsToSave = exerciseSets
-      .filter(set => (set.weight && set.weight !== '') || (set.reps && set.reps !== ''))
+      .filter(set => (set.weight !== '' && set.weight !== 0) || (set.reps !== '' && set.reps !== 0))
       .map(set => ({
         weight: typeof set.weight === 'number' ? set.weight : 0,
         reps: typeof set.reps === 'number' ? set.reps : 0

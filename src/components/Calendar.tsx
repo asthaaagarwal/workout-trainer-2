@@ -30,7 +30,6 @@ export default function Calendar() {
     return { feeling, sessions }
   }
 
-  const selectedDateStr = date ? formatDate(date) : ''
   const { feeling, sessions } = date ? getDataForDate(date) : { feeling: null, sessions: [] }
 
   // Get workout name from ID
