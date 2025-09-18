@@ -1,0 +1,201 @@
+{
+  "workouts": [
+    {
+      "id": "full-body",
+      "name": "Full body",
+      "description": "Complete workout for all muscle groups",
+      "warmup": [
+        "Jumping jacks",
+        "Arm circles",
+        "Leg swings",
+        "Hip circles"
+      ],
+      "mainExercises": [
+        "Push-ups",
+        "Squats",
+        "Plank",
+        "Lunges",
+        "Mountain climbers",
+        "Burpees"
+      ],
+      "cooldown": [
+        "Standing quad stretch",
+        "Calf stretch",
+        "Shoulder stretch",
+        "Deep breathing"
+      ]
+    },
+    {
+      "id": "upper-body",
+      "name": "Upper body",
+      "description": "Focus on arms, chest, and back",
+      "warmup": [
+        "Arm swings",
+        "Shoulder rolls",
+        "Neck rolls",
+        "Light arm stretches"
+      ],
+      "mainExercises": [
+        "Push-ups",
+        "Pike push-ups",
+        "Tricep dips",
+        "Plank to downward dog",
+        "Wall handstand practice",
+        "Diamond push-ups"
+      ],
+      "cooldown": [
+        "Chest stretch",
+        "Tricep stretch",
+        "Shoulder stretch",
+        "Upper back stretch"
+      ]
+    },
+    {
+      "id": "lower-body",
+      "name": "Lower body",
+      "description": "Focus on legs and glutes",
+      "warmup": [
+        "Marching in place",
+        "Leg swings",
+        "Hip circles",
+        "Ankle rolls"
+      ],
+      "mainExercises": [
+        "Squats",
+        "Lunges",
+        "Single-leg glute bridges",
+        "Wall sit",
+        "Calf raises",
+        "Jump squats"
+      ],
+      "cooldown": [
+        "Standing quad stretch",
+        "Standing calf stretch",
+        "Figure-4 hip stretch",
+        "Standing hamstring stretch"
+      ]
+    }
+  ],
+  "exerciseMetadata": {
+    "Push-ups": {
+      "videoUrl": "https://www.youtube.com/watch?v=IODxDxX7oi4",
+      "tips": [
+        "Keep your body in a straight line from head to heels",
+        "Lower your chest until elbows are at 90 degrees",
+        "Engage your core throughout the movement"
+      ]
+    },
+    "Squats": {
+      "videoUrl": "https://www.youtube.com/watch?v=aclHkVaku9U",
+      "tips": [
+        "Keep your weight on your heels",
+        "Push your knees out in line with your toes",
+        "Keep your chest up and back straight"
+      ]
+    },
+    "Plank": {
+      "videoUrl": "https://www.youtube.com/watch?v=ASdvN_XEl_c",
+      "tips": [
+        "Keep your body in a straight line",
+        "Don't let your hips sag or pike up",
+        "Breathe normally throughout the hold"
+      ]
+    },
+    "Lunges": {
+      "videoUrl": "https://www.youtube.com/watch?v=QOVaHwm-Q6U",
+      "tips": [
+        "Keep your front knee over your ankle",
+        "Lower until both knees are at 90 degrees",
+        "Keep your torso upright and core engaged"
+      ]
+    },
+    "Mountain climbers": {
+      "videoUrl": "https://www.youtube.com/watch?v=nmwgirgXLYM",
+      "tips": [
+        "Keep your core tight and hips level",
+        "Drive your knees toward your chest quickly",
+        "Maintain a steady breathing rhythm"
+      ]
+    },
+    "Burpees": {
+      "videoUrl": "https://www.youtube.com/watch?v=dZgVxmf6jkA",
+      "tips": [
+        "Land softly when jumping back into plank",
+        "Keep the movement fluid and controlled",
+        "Jump explosively at the end of each rep"
+      ]
+    },
+    "Pike push-ups": {
+      "videoUrl": "https://www.youtube.com/watch?v=sposDXWEB0A",
+      "tips": [
+        "Form an inverted V with your body",
+        "Lower your head toward the ground between your hands",
+        "Focus on shoulder engagement"
+      ]
+    },
+    "Tricep dips": {
+      "videoUrl": "https://www.youtube.com/watch?v=6kALZikXxLc",
+      "tips": [
+        "Keep your elbows pointing backward, not out",
+        "Lower until elbows are at 90 degrees",
+        "Keep your core engaged and back close to the surface"
+      ]
+    },
+    "Plank to downward dog": {
+      "videoUrl": "https://www.youtube.com/watch?v=8pRDvvaIhAk",
+      "tips": [
+        "Start in a strong plank position",
+        "Push your hips up and back smoothly",
+        "Return to plank with control"
+      ]
+    },
+    "Wall handstand practice": {
+      "videoUrl": "https://www.youtube.com/watch?v=6jm4R3K4sJA",
+      "tips": [
+        "Start with feet on wall and walk them up gradually",
+        "Keep arms straight and shoulders engaged",
+        "Practice against a wall for safety"
+      ]
+    },
+    "Diamond push-ups": {
+      "videoUrl": "https://www.youtube.com/watch?v=J0DnG1_S92I",
+      "tips": [
+        "Form a diamond shape with your hands",
+        "Keep elbows close to your body",
+        "Lower slowly and push up with control"
+      ]
+    },
+    "Single-leg glute bridges": {
+      "videoUrl": "https://www.youtube.com/watch?v=AVAXhy6pl7o",
+      "tips": [
+        "Keep one leg extended throughout",
+        "Squeeze your glutes at the top",
+        "Don't let your hips rotate"
+      ]
+    },
+    "Wall sit": {
+      "videoUrl": "https://www.youtube.com/watch?v=y-wV4Venusw",
+      "tips": [
+        "Keep your back flat against the wall",
+        "Thighs should be parallel to the ground",
+        "Breathe normally throughout the hold"
+      ]
+    },
+    "Calf raises": {
+      "videoUrl": "https://www.youtube.com/watch?v=gwLzBJYoWlI",
+      "tips": [
+        "Rise up onto the balls of your feet",
+        "Pause at the top of the movement",
+        "Lower down slowly with control"
+      ]
+    },
+    "Jump squats": {
+      "videoUrl": "https://www.youtube.com/watch?v=A-cFYWvaHr0",
+      "tips": [
+        "Land softly with bent knees",
+        "Explode up from the bottom of the squat",
+        "Keep your core engaged throughout"
+      ]
+    }
+  }
+}
