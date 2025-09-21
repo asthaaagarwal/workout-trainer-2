@@ -1,36 +1,51 @@
-import { useState } from 'react'
-import { Calendar as CalendarComponent } from '@/components/ui/calendar'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { getFeelingByDate } from '@/utils/feelingStorage'
-import { loadWorkoutHistory } from '@/utils/workoutStorage'
+import { loadWorkoutHistory, type WorkoutSession } from '@/utils/workoutStorage'
+import { getAllFeelings } from '@/utils/feelingStorage'
 import workoutData from '@/data/workouts.json'
+import { Calendar as CalendarIcon, Clock, Dumbbell, Smile, Frown, AlertTriangle } from 'lucide-react'
 
 export default function Calendar() {
-  const [date, setDate] = useState<Date | undefined>(new Date())
+  const [dailyData, setDailyData] = useState<Record<string, {
+    workouts: WorkoutSession[],
+    feeling?: { feeling: string, feedback: string }
+  }>>({})
 
-  // Format date to YYYY-MM-DD
-  const formatDate = (date: Date): string => {
-    const year = date.getFullYear()
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const day = String(date.getDate()).padStart(2, '0')
-    return `${year}-${month}-${day}`
-  }
-
-  // Get feeling and workout data for selected date
-  const getDataForDate = (selectedDate: Date) => {
-    const dateStr = formatDate(selectedDate)
-
-    // Get feeling for this date
-    const feeling = getFeelingByDate(dateStr)
-
-    // Get workout sessions for this date
+  useEffect(() => {
+    // Load all workout history
     const history = loadWorkoutHistory()
-    const sessions = history.sessions.filter(s => s.date === dateStr && s.completed)
+    const completedWorkouts = history.sessions.filter(s => s.completed)
 
-    return { feeling, sessions }
-  }
+    // Load all feelings
+    const allFeelings = getAllFeelings()
 
-  const { feeling, sessions } = date ? getDataForDate(date) : { feeling: null, sessions: [] }
+    // Combine data by date
+    const dataByDate: Record<string, {
+      workouts: WorkoutSession[],
+      feeling?: { feeling: string, feedback: string }
+    }> = {}
+
+    // Add workouts
+    completedWorkouts.forEach(workout => {
+      if (!dataByDate[workout.date]) {
+        dataByDate[workout.date] = { workouts: [] }
+      }
+      dataByDate[workout.date].workouts.push(workout)
+    })
+
+    // Add feelings
+    allFeelings.forEach(feeling => {
+      if (!dataByDate[feeling.date]) {
+        dataByDate[feeling.date] = { workouts: [] }
+      }
+      dataByDate[feeling.date].feeling = {
+        feeling: feeling.feeling,
+        feedback: feeling.feedback
+      }
+    })
+
+    setDailyData(dataByDate)
+  }, [])
 
   // Get workout name from ID
   const getWorkoutName = (workoutId: string): string => {
@@ -45,70 +60,127 @@ export default function Calendar() {
     return `${duration} min`
   }
 
+  // Format date
+  const formatDate = (dateStr: string): string => {
+    const date = new Date(dateStr + 'T00:00:00')
+    return date.toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    })
+  }
+
+  // Format time
+  const formatTime = (timestamp: number): string => {
+    return new Date(timestamp).toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  }
+
+  // Get feeling icon
+  const getFeelingIcon = (feeling: string) => {
+    switch(feeling) {
+      case 'Good':
+        return <Smile className="h-4 w-4 text-green-600" />
+      case 'Sore':
+        return <Frown className="h-4 w-4 text-yellow-600" />
+      case 'Very sore':
+        return <AlertTriangle className="h-4 w-4 text-red-600" />
+      default:
+        return null
+    }
+  }
+
+  // Sort dates in descending order (most recent first)
+  const sortedDates = Object.keys(dailyData).sort((a, b) => b.localeCompare(a))
+
   return (
     <div className="p-4 space-y-4">
-      <CalendarComponent
-        mode="single"
-        selected={date}
-        onSelect={setDate}
-        className="rounded-md border w-full"
-      />
+      <h1 className="text-2xl font-bold mb-4">Daily Log</h1>
 
-      {date && (
+      {sortedDates.length === 0 ? (
         <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">
-              {date.toLocaleDateString('en-US', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Feeling Section */}
-            <div>
-              <h3 className="text-sm font-medium mb-2">Feeling</h3>
-              {feeling ? (
-                <div className="space-y-1">
-                  <p className="text-sm">
-                    <span className="font-medium">{feeling.feeling}</span>
-                  </p>
-                  {feeling.feedback && (
-                    <p className="text-sm text-muted-foreground">{feeling.feedback}</p>
-                  )}
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">No feeling recorded</p>
-              )}
-            </div>
-
-            {/* Workout Section */}
-            <div>
-              <h3 className="text-sm font-medium mb-2">Workout</h3>
-              {sessions.length > 0 ? (
-                <div className="space-y-2">
-                  {sessions.map(session => (
-                    <div key={session.id} className="space-y-1">
-                      <p className="text-sm font-medium">{getWorkoutName(session.workoutId)}</p>
-                      {session.endTime && (
-                        <p className="text-sm text-muted-foreground">
-                          Duration: {formatDuration(session.startTime, session.endTime)}
-                        </p>
-                      )}
-                      <p className="text-sm text-muted-foreground">
-                        {session.exercises.length} exercises completed
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">No workout completed</p>
-              )}
-            </div>
+          <CardContent>
+            <p className="text-center text-muted-foreground">No data recorded yet</p>
           </CardContent>
         </Card>
+      ) : (
+        <div className="space-y-4">
+          {sortedDates.map(date => {
+            const dayData = dailyData[date]
+            return (
+              <Card key={date}>
+                <CardHeader className="pb-0">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <CalendarIcon className="h-4 w-4" />
+                    {formatDate(date)}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* Feeling Section */}
+                  {dayData.feeling && (
+                    <div className="flex items-start gap-2">
+                      {getFeelingIcon(dayData.feeling.feeling)}
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">Feeling: {dayData.feeling.feeling}</p>
+                        {dayData.feeling.feedback && (
+                          <p className="text-sm text-muted-foreground mt-1">{dayData.feeling.feedback}</p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Workouts Section */}
+                  {dayData.workouts.length > 0 && (
+                    <div className="space-y-2">
+                      {dayData.workouts.map(session => (
+                        <div key={session.id} className="border-l-2 border-primary pl-3 space-y-1">
+                          <p className="font-medium">{getWorkoutName(session.workoutId)} Workout</p>
+                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <Clock className="h-3 w-3" />
+                              {formatTime(session.startTime)}
+                              {session.endTime && ` - ${formatTime(session.endTime)}`}
+                            </span>
+                            {session.endTime && (
+                              <span>{formatDuration(session.startTime, session.endTime)}</span>
+                            )}
+                            <span className="flex items-center gap-1">
+                              <Dumbbell className="h-3 w-3" />
+                              {session.exercises.length} exercises
+                            </span>
+                          </div>
+
+                          {/* Exercise details */}
+                          <div className="mt-2 space-y-1">
+                            {session.exercises.map((exercise, idx) => (
+                              <div key={idx} className="text-sm text-muted-foreground">
+                                <span className="font-medium">{exercise.name}:</span>{' '}
+                                {exercise.sets.map((set, setIdx) => (
+                                  <span key={setIdx}>
+                                    {setIdx > 0 && ', '}
+                                    {set.weight}kg × {set.reps}
+                                  </span>
+                                ))}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Show message if no data for this day */}
+                  {!dayData.feeling && dayData.workouts.length === 0 && (
+                    <p className="text-sm text-muted-foreground">No data for this day</p>
+                  )}
+                </CardContent>
+              </Card>
+            )
+          })}
+        </div>
       )}
     </div>
   )

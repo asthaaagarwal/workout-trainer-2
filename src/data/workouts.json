@@ -5,24 +5,22 @@
       "name": "Full body",
       "description": "Complete workout for all muscle groups",
       "warmup": [
-        "Jumping jacks",
-        "Arm circles",
-        "Leg swings",
-        "Hip circles"
+        "Dead bug",
+        "Shoulder tap",
+        "Hand walks"
       ],
       "mainExercises": [
-        "Push-ups",
-        "Squats",
-        "Plank",
-        "Lunges",
-        "Mountain climbers",
-        "Burpees"
+        "Chest press",
+        "Back squats",
+        "Bent over rows",
+        "Single leg deadlift",
+        "Push ups",
+        "Side lunge"
       ],
       "cooldown": [
-        "Standing quad stretch",
-        "Calf stretch",
-        "Shoulder stretch",
-        "Deep breathing"
+        "Dead bug",
+        "Leg raises",
+        "Stretch"
       ]
     },
     {
@@ -30,24 +28,22 @@
       "name": "Upper body",
       "description": "Focus on arms, chest, and back",
       "warmup": [
-        "Arm swings",
-        "Shoulder rolls",
-        "Neck rolls",
-        "Light arm stretches"
+        "Dead bug",
+        "Shoulder tap",
+        "Push ups"
       ],
       "mainExercises": [
-        "Push-ups",
-        "Pike push-ups",
-        "Tricep dips",
-        "Plank to downward dog",
-        "Wall handstand practice",
-        "Diamond push-ups"
+        "Chest press",
+        "Lat pull downs",
+        "Bent over rows",
+        "Shoulder press",
+        "Bicep curls",
+        "Tricep curls"
       ],
       "cooldown": [
-        "Chest stretch",
-        "Tricep stretch",
-        "Shoulder stretch",
-        "Upper back stretch"
+        "Plank",
+        "Russian twists",
+        "Stretch"
       ]
     },
     {
@@ -55,37 +51,116 @@
       "name": "Lower body",
       "description": "Focus on legs and glutes",
       "warmup": [
-        "Marching in place",
-        "Leg swings",
-        "Hip circles",
-        "Ankle rolls"
+        "Dead bug",
+        "Shoulder tap",
+        "Bodyweight squats"
       ],
       "mainExercises": [
-        "Squats",
-        "Lunges",
-        "Single-leg glute bridges",
-        "Wall sit",
-        "Calf raises",
-        "Jump squats"
+        "Back squats",
+        "Deadlift",
+        "Step ups",
+        "Hip thrust",
+        "Single leg extension",
+        "Side lunge"
       ],
       "cooldown": [
-        "Standing quad stretch",
-        "Standing calf stretch",
-        "Figure-4 hip stretch",
-        "Standing hamstring stretch"
+        "Mountain climbers",
+        "Bicycle crunches",
+        "Stretch"
       ]
     }
   ],
   "exerciseMetadata": {
-    "Push-ups": {
-      "videoUrl": "https://www.youtube.com/watch?v=IODxDxX7oi4",
+    "Dead bug": {
+      "type": "bodyweight",
+      "tips": [
+        "Keep your lower back pressed to the floor",
+        "Move slowly and controlled",
+        "Breathe out as you extend opposite arm and leg"
+      ]
+    },
+    "Shoulder tap": {
+      "type": "bodyweight",
+      "tips": [
+        "Keep hips stable and avoid rocking",
+        "Maintain a strong plank position",
+        "Tap shoulder lightly and return to starting position"
+      ]
+    },
+    "Push ups": {
+      "type": "bodyweight",
+      "videoUrl": "https://www.youtube.com/watch?v=KEFQyLkDYtI",
       "tips": [
         "Keep your body in a straight line from head to heels",
         "Lower your chest until elbows are at 90 degrees",
         "Engage your core throughout the movement"
       ]
     },
+    "Push-ups": {
+      "type": "bodyweight",
+      "videoUrl": "https://www.youtube.com/watch?v=KEFQyLkDYtI",
+      "tips": [
+        "Keep your body in a straight line from head to heels",
+        "Lower your chest until elbows are at 90 degrees",
+        "Engage your core throughout the movement"
+      ]
+    },
+    "Chest press": {
+      "type": "weighted",
+      "videoUrl": "https://www.youtube.com/watch?v=tuHzzPdaGc",
+      "tips": [
+        "Keep feet flat on the floor",
+        "Lower weights with control to chest level",
+        "Press up powerfully while maintaining form"
+      ]
+    },
+    "Lat pull downs": {
+      "type": "weighted",
+      "videoUrl": "https://www.youtube.com/watch?v=Mdp7kuhZD_M",
+      "tips": [
+        "Pull the bar to upper chest",
+        "Keep chest up and shoulders back",
+        "Control the weight on the way up"
+      ]
+    },
+    "Bent over rows": {
+      "type": "weighted",
+      "videoUrl": "https://www.youtube.com/watch?v=3_RR7ELmcAk",
+      "tips": [
+        "Keep back straight and core engaged",
+        "Pull weights to your sides",
+        "Squeeze shoulder blades together at the top"
+      ]
+    },
+    "Shoulder press": {
+      "type": "weighted",
+      "videoUrl": "https://www.youtube.com/watch?v=FRxZ6wr5bpA",
+      "tips": [
+        "Keep core tight throughout",
+        "Press weights straight up",
+        "Don't arch your back excessively"
+      ]
+    },
+    "Bicep curls": {
+      "type": "weighted",
+      "videoUrl": "https://www.youtube.com/watch?v=tMEGqKuOa-M",
+      "tips": [
+        "Keep elbows at your sides",
+        "Control the weight down slowly",
+        "Don't swing or use momentum"
+      ]
+    },
+    "Tricep curls": {
+      "type": "weighted",
+      "videoUrl": "https://www.youtube.com/watch?v=VjmgzEmODnI",
+      "tips": [
+        "Keep elbows close to your head",
+        "Extend fully at the top",
+        "Lower weight with control"
+      ]
+    },
     "Squats": {
+      "type": "weighted",
       "videoUrl": "https://www.youtube.com/watch?v=aclHkVaku9U",
       "tips": [
         "Keep your weight on your heels",
@@ -94,107 +169,128 @@
       ]
     },
     "Plank": {
-      "videoUrl": "https://www.youtube.com/watch?v=ASdvN_XEl_c",
+      "type": "bodyweight",
       "tips": [
         "Keep your body in a straight line",
         "Don't let your hips sag or pike up",
         "Breathe normally throughout the hold"
       ]
     },
-    "Lunges": {
-      "videoUrl": "https://www.youtube.com/watch?v=QOVaHwm-Q6U",
+    "Russian twists": {
+      "type": "bodyweight",
       "tips": [
-        "Keep your front knee over your ankle",
-        "Lower until both knees are at 90 degrees",
-        "Keep your torso upright and core engaged"
+        "Keep chest up and spine straight",
+        "Rotate from your core, not just arms",
+        "Keep feet elevated for more challenge"
+      ]
+    },
+    "Stretch": {
+      "type": "bodyweight",
+      "tips": [
+        "Hold each stretch for 20-30 seconds",
+        "Don't bounce while stretching",
+        "Breathe deeply and relax into the stretch"
+      ]
+    },
+    "Bodyweight squats": {
+      "type": "bodyweight",
+      "tips": [
+        "Keep weight on heels",
+        "Knees track over toes",
+        "Go as low as comfortable while maintaining form"
+      ]
+    },
+    "Back squats": {
+      "type": "weighted",
+      "videoUrl": "https://www.youtube.com/watch?v=R2dMsNhN3DE",
+      "tips": [
+        "Keep chest up and core braced",
+        "Drive through heels to stand",
+        "Maintain neutral spine throughout"
+      ]
+    },
+    "Deadlift": {
+      "type": "weighted",
+      "videoUrl": "https://www.youtube.com/watch?v=wjsu6ceEkAQ",
+      "tips": [
+        "Keep bar close to your body",
+        "Drive hips forward at the top",
+        "Keep back straight throughout movement"
+      ]
+    },
+    "Step ups": {
+      "type": "bodyweight",
+      "videoUrl": "https://youtube.com/watch?v=elhu-WC1qk4",
+      "tips": [
+        "Push through heel of elevated foot",
+        "Keep torso upright",
+        "Control the descent"
+      ]
+    },
+    "Hip thrust": {
+      "type": "bodyweight",
+      "videoUrl": "https://www.youtube.com/watch?v=awBS7K71l8",
+      "tips": [
+        "Drive through heels",
+        "Squeeze glutes at the top",
+        "Keep chin tucked"
+      ]
+    },
+    "Single leg extension": {
+      "type": "bodyweight",
+      "videoUrl": "https://www.youtube.com/watch?v=82IuSLk5zNc",
+      "tips": [
+        "Keep core engaged for stability",
+        "Extend leg fully at the top",
+        "Control the movement speed"
+      ]
+    },
+    "Side lunge": {
+      "type": "bodyweight",
+      "tips": [
+        "Keep chest up and back straight",
+        "Push hips back as you lunge",
+        "Keep the other leg straight"
       ]
     },
     "Mountain climbers": {
-      "videoUrl": "https://www.youtube.com/watch?v=nmwgirgXLYM",
+      "type": "bodyweight",
       "tips": [
-        "Keep your core tight and hips level",
-        "Drive your knees toward your chest quickly",
-        "Maintain a steady breathing rhythm"
+        "Keep core tight and hips level",
+        "Drive knees toward chest quickly",
+        "Maintain steady breathing rhythm"
       ]
     },
-    "Burpees": {
-      "videoUrl": "https://www.youtube.com/watch?v=dZgVxmf6jkA",
+    "Bicycle crunches": {
+      "type": "bodyweight",
       "tips": [
-        "Land softly when jumping back into plank",
-        "Keep the movement fluid and controlled",
-        "Jump explosively at the end of each rep"
+        "Bring elbow to opposite knee",
+        "Keep lower back pressed to floor",
+        "Don't pull on your neck"
       ]
     },
-    "Pike push-ups": {
-      "videoUrl": "https://www.youtube.com/watch?v=sposDXWEB0A",
+    "Hand walks": {
+      "type": "bodyweight",
       "tips": [
-        "Form an inverted V with your body",
-        "Lower your head toward the ground between your hands",
-        "Focus on shoulder engagement"
+        "Keep legs as straight as possible",
+        "Walk hands out to plank position",
+        "Maintain tight core throughout"
       ]
     },
-    "Tricep dips": {
-      "videoUrl": "https://www.youtube.com/watch?v=6kALZikXxLc",
+    "Single leg deadlift": {
+      "type": "bodyweight",
       "tips": [
-        "Keep your elbows pointing backward, not out",
-        "Lower until elbows are at 90 degrees",
-        "Keep your core engaged and back close to the surface"
+        "Keep hips square to the ground",
+        "Hinge at the hips",
+        "Keep standing leg slightly bent"
       ]
     },
-    "Plank to downward dog": {
-      "videoUrl": "https://www.youtube.com/watch?v=8pRDvvaIhAk",
+    "Leg raises": {
+      "type": "bodyweight",
       "tips": [
-        "Start in a strong plank position",
-        "Push your hips up and back smoothly",
-        "Return to plank with control"
-      ]
-    },
-    "Wall handstand practice": {
-      "videoUrl": "https://www.youtube.com/watch?v=6jm4R3K4sJA",
-      "tips": [
-        "Start with feet on wall and walk them up gradually",
-        "Keep arms straight and shoulders engaged",
-        "Practice against a wall for safety"
-      ]
-    },
-    "Diamond push-ups": {
-      "videoUrl": "https://www.youtube.com/watch?v=J0DnG1_S92I",
-      "tips": [
-        "Form a diamond shape with your hands",
-        "Keep elbows close to your body",
-        "Lower slowly and push up with control"
-      ]
-    },
-    "Single-leg glute bridges": {
-      "videoUrl": "https://www.youtube.com/watch?v=AVAXhy6pl7o",
-      "tips": [
-        "Keep one leg extended throughout",
-        "Squeeze your glutes at the top",
-        "Don't let your hips rotate"
-      ]
-    },
-    "Wall sit": {
-      "videoUrl": "https://www.youtube.com/watch?v=y-wV4Venusw",
-      "tips": [
-        "Keep your back flat against the wall",
-        "Thighs should be parallel to the ground",
-        "Breathe normally throughout the hold"
-      ]
-    },
-    "Calf raises": {
-      "videoUrl": "https://www.youtube.com/watch?v=gwLzBJYoWlI",
-      "tips": [
-        "Rise up onto the balls of your feet",
-        "Pause at the top of the movement",
-        "Lower down slowly with control"
-      ]
-    },
-    "Jump squats": {
-      "videoUrl": "https://www.youtube.com/watch?v=A-cFYWvaHr0",
-      "tips": [
-        "Land softly with bent knees",
-        "Explode up from the bottom of the squat",
-        "Keep your core engaged throughout"
+        "Keep lower back pressed to floor",
+        "Lower legs slowly with control",
+        "Don't let feet touch the ground between reps"
       ]
     }
   }

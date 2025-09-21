@@ -65,10 +65,20 @@ export default function ExerciseScreen({ exerciseName, session, onBack, onSave }
 
   const handleSaveExercise = () => {
     // Convert exercise sets to the correct format for storage
+    const isBodyweight = exerciseMetadata?.type === 'bodyweight'
+
     const setsToSave = exerciseSets
-      .filter(set => (set.weight !== '' && set.weight !== 0) || (set.reps !== '' && set.reps !== 0))
+      .filter(set => {
+        if (isBodyweight) {
+          // For bodyweight, only check reps
+          return set.reps !== '' && set.reps !== 0
+        } else {
+          // For weighted, check both weight and reps
+          return (set.weight !== '' && set.weight !== 0) || (set.reps !== '' && set.reps !== 0)
+        }
+      })
       .map(set => ({
-        weight: typeof set.weight === 'number' ? set.weight : 0,
+        weight: isBodyweight ? 0 : (typeof set.weight === 'number' ? set.weight : 0),
         reps: typeof set.reps === 'number' ? set.reps : 0
       }))
 
@@ -100,27 +110,29 @@ export default function ExerciseScreen({ exerciseName, session, onBack, onSave }
 
         <h1 className="text-2xl font-bold text-center mb-4">{exerciseName}</h1>
 
-      {exerciseMetadata && (
+      {exerciseMetadata?.tips && (
         <Card className="mb-4">
           <CardContent className="pt-0">
             <ul className="space-y-1 text-sm text-muted-foreground">
-              {exerciseMetadata.tips?.map((tip: string, index: number) => (
+              {exerciseMetadata.tips.map((tip: string, index: number) => (
                 <li key={index} className="flex items-start gap-2">
                   <span className="text-xs mt-0.5">•</span>
                   <span>{tip}</span>
                 </li>
               ))}
             </ul>
-            {exerciseMetadata.videoUrl && (
-              <Button
-                variant="link"
-                className="mt-3 p-0 h-auto text-sm"
-                onClick={() => window.open(exerciseMetadata.videoUrl, '_blank')}
-              >
-                <Video className="h-4 w-4 mr-2" />
-                Watch video tutorial
-              </Button>
-            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {exerciseMetadata?.videoUrl && (
+        <Card
+          className="mb-4 cursor-pointer hover:bg-accent/50 transition-colors"
+          onClick={() => window.open(exerciseMetadata.videoUrl, '_blank')}
+        >
+          <CardContent className="pt-0 flex items-center justify-center gap-2">
+            <Video className="h-4 w-4" />
+            <span className="text-sm font-medium">Watch video tutorial</span>
           </CardContent>
         </Card>
       )}
@@ -130,19 +142,23 @@ export default function ExerciseScreen({ exerciseName, session, onBack, onSave }
             <div key={index} className="flex items-center justify-between py-3">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium w-12">Set {index + 1}</span>
-                <div className="relative">
-                  <input
-                    type="number"
-                    value={set.weight || ''}
-                    onChange={(e) => updateSet(index, 'weight', e.target.value === '' ? '' : parseInt(e.target.value) || 0)}
-                    className="w-20 pl-2 pr-8 py-1 text-sm border rounded text-left [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    placeholder="0"
-                  />
-                  <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-gray-400 pointer-events-none">
-                    kg
-                  </span>
-                </div>
-                <X className="h-3 w-3 text-gray-400" />
+                {exerciseMetadata?.type !== 'bodyweight' && (
+                  <>
+                    <div className="relative">
+                      <input
+                        type="number"
+                        value={set.weight || ''}
+                        onChange={(e) => updateSet(index, 'weight', e.target.value === '' ? '' : parseInt(e.target.value) || 0)}
+                        className="w-20 pl-2 pr-8 py-1 text-sm border rounded text-left [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        placeholder="0"
+                      />
+                      <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-gray-400 pointer-events-none">
+                        kg
+                      </span>
+                    </div>
+                    <X className="h-3 w-3 text-gray-400" />
+                  </>
+                )}
                 <div className="relative">
                   <input
                     type="number"

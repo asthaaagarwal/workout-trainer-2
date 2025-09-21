@@ -114,7 +114,7 @@ export default function Home({ onWorkoutSelect }: HomeProps) {
         </CardContent>
       </Card>
 
-      {completedWorkout ? (
+      {completedWorkout && (
         <>
           <h2 className="text-2xl font-semibold mt-4 mb-4 text-green-600 flex items-center gap-2">
             <Trophy className="h-6 w-6" />
@@ -151,7 +151,7 @@ export default function Home({ onWorkoutSelect }: HomeProps) {
                     <div className="text-xs text-muted-foreground space-x-3">
                       {exercise.sets.map((set, setIndex) => (
                         <span key={setIndex}>
-                          Set {setIndex + 1}: {set.weight}kg × {set.reps} reps
+                          Set {setIndex + 1}: {set.weight > 0 ? `${set.weight}kg × ` : ''}{set.reps} reps
                         </span>
                       ))}
                     </div>
@@ -161,30 +161,30 @@ export default function Home({ onWorkoutSelect }: HomeProps) {
             </CardContent>
           </Card>
         </>
-      ) : (
-        <>
-          <h2 className="text-2xl font-semibold mt-4 mb-4">Which workout do you want to do today?</h2>
-
-          <div className="grid grid-cols-1 gap-4">
-            {workoutData.workouts.map((workout) => (
-              <Card
-                key={workout.id}
-                className="@container/card cursor-pointer hover:shadow-md transition-shadow"
-                onClick={() => onWorkoutSelect(workout.id)}
-              >
-                <CardHeader className="gap-1">
-                  <CardTitle className="text-xl font-semibold">
-                    {workout.name}
-                  </CardTitle>
-                  <div className="text-muted-foreground text-sm">
-                    {workout.description}
-                  </div>
-                </CardHeader>
-              </Card>
-            ))}
-          </div>
-        </>
       )}
+
+      <h2 className="text-2xl font-semibold mt-4 mb-4">
+        {completedWorkout ? 'Start another workout' : 'Which workout do you want to do today?'}
+      </h2>
+
+      <div className="grid grid-cols-1 gap-4">
+        {workoutData.workouts.map((workout) => (
+          <Card
+            key={workout.id}
+            className="@container/card cursor-pointer hover:shadow-md transition-shadow"
+            onClick={() => onWorkoutSelect(workout.id)}
+          >
+            <CardHeader className="gap-1">
+              <CardTitle className="text-xl font-semibold">
+                {workout.name}
+              </CardTitle>
+              <div className="text-muted-foreground text-sm">
+                {workout.description}
+              </div>
+            </CardHeader>
+          </Card>
+        ))}
+      </div>
     </div>
   )
 }
