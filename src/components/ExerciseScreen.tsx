@@ -29,7 +29,7 @@ export default function ExerciseScreen({ exerciseName, session, onBack, onSave }
   ])
 
   // Get exercise metadata
-  const exerciseMetadata = (workoutData as any).exerciseMetadata?.[exerciseName]
+  const exerciseMetadata = (workoutData as { exerciseMetadata?: Record<string, { type?: string; tips?: string[]; videoUrl?: string }> }).exerciseMetadata?.[exerciseName]
 
   useEffect(() => {
     // Load previous data for this exercise
@@ -45,6 +45,31 @@ export default function ExerciseScreen({ exerciseName, session, onBack, onSave }
       setExerciseSets([{ weight: '', reps: '' }, { weight: '', reps: '' }, { weight: '', reps: '' }])
     }
   }, [session.id, exerciseName])
+
+  // Auto-save exercise data whenever sets change
+  useEffect(() => {
+    const isBodyweight = exerciseMetadata?.type === 'bodyweight'
+
+    const setsToSave = exerciseSets
+      .filter(set => {
+        if (isBodyweight) {
+          // For bodyweight, only check reps
+          return set.reps !== '' && set.reps !== 0
+        } else {
+          // For weighted, check both weight and reps
+          return (set.weight !== '' && set.weight !== 0) || (set.reps !== '' && set.reps !== 0)
+        }
+      })
+      .map(set => ({
+        weight: isBodyweight ? 0 : (typeof set.weight === 'number' ? set.weight : 0),
+        reps: typeof set.reps === 'number' ? set.reps : 0
+      }))
+
+    // Only save if there are valid sets
+    if (setsToSave.length > 0) {
+      saveExerciseData(session.id, exerciseName, setsToSave)
+    }
+  }, [exerciseSets, session.id, exerciseName, exerciseMetadata])
 
   const addSet = () => {
     setExerciseSets([...exerciseSets, { weight: '', reps: '' }])

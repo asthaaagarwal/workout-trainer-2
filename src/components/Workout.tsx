@@ -15,6 +15,9 @@ import {
   getOrCreateSession,
   completeWorkoutSession,
   getCompletedExercises,
+  startWorkoutTimer,
+  stopWorkoutTimer,
+  getTimerState,
   type WorkoutSession
 } from '@/utils/workoutStorage'
 
@@ -39,6 +42,11 @@ export default function Workout({ workoutId, onBack, onCongratulations, onExerci
     const session = getOrCreateSession(workoutId)
     setCurrentSession(session)
     setCompletedExercises(getCompletedExercises(session.id))
+
+    // Load timer state
+    const timerState = getTimerState(session.id)
+    setIsTimerRunning(timerState.isRunning)
+    setElapsedTime(timerState.elapsedSeconds)
   }, [workoutId])
 
   // Refresh completed exercises when returning from exercise screen
@@ -52,9 +60,10 @@ export default function Workout({ workoutId, onBack, onCongratulations, onExerci
   }, [currentSession])
 
   useEffect(() => {
-    if (isTimerRunning) {
+    if (isTimerRunning && currentSession) {
       timerInterval.current = setInterval(() => {
-        setElapsedTime(prev => prev + 1)
+        const timerState = getTimerState(currentSession.id)
+        setElapsedTime(timerState.elapsedSeconds)
       }, 1000)
     } else {
       if (timerInterval.current) {
@@ -67,7 +76,7 @@ export default function Workout({ workoutId, onBack, onCongratulations, onExerci
         clearInterval(timerInterval.current)
       }
     }
-  }, [isTimerRunning])
+  }, [isTimerRunning, currentSession])
 
   const handleExerciseClick = (exercise: string) => {
     if (currentSession) {
@@ -78,6 +87,7 @@ export default function Workout({ workoutId, onBack, onCongratulations, onExerci
 
   const handleCompleteWorkout = () => {
     if (currentSession) {
+      stopWorkoutTimer(currentSession.id)
       completeWorkoutSession(currentSession.id)
       onBack()
     }
@@ -94,16 +104,19 @@ export default function Workout({ workoutId, onBack, onCongratulations, onExerci
   }
 
   const handleStartWorkout = () => {
-    setIsTimerRunning(true)
+    if (currentSession) {
+      startWorkoutTimer(currentSession.id)
+      setIsTimerRunning(true)
+    }
   }
 
   const handleEndWorkout = () => {
-    setIsTimerRunning(false)
-    setShowEndDialog(false)
-    // Always save the workout session when ended
     if (currentSession) {
+      stopWorkoutTimer(currentSession.id)
       completeWorkoutSession(currentSession.id)
     }
+    setIsTimerRunning(false)
+    setShowEndDialog(false)
     // Navigate to congratulations screen
     onCongratulations(formatTime(elapsedTime), completedExercises.length)
   }

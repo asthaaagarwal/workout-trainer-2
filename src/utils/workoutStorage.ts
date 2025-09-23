@@ -19,6 +19,10 @@ export interface WorkoutSession {
   endTime?: number // Unix timestamp when workout was completed
   exercises: ExerciseData[]
   completed: boolean
+  // Timer persistence fields
+  timerStartTime?: number // Unix timestamp when timer was started
+  isTimerRunning: boolean // Whether timer is currently running
+  timerElapsedSeconds: number // Total elapsed seconds when timer was last paused/stopped
 }
 
 export interface WorkoutHistory {
@@ -79,7 +83,9 @@ export const getOrCreateSession = (workoutId: string): WorkoutSession => {
       date: today,
       startTime: Date.now(),
       exercises: [],
-      completed: false
+      completed: false,
+      isTimerRunning: false,
+      timerElapsedSeconds: 0
     }
     history.sessions.push(session)
     saveWorkoutHistory(history)
@@ -190,4 +196,78 @@ export const getTodayCompletedWorkout = (): WorkoutSession | null => {
   )
 
   return completedSession || null
+}
+
+// Start the workout timer
+export const startWorkoutTimer = (sessionId: string): void => {
+  const history = loadWorkoutHistory()
+  const session = history.sessions.find(s => s.id === sessionId)
+
+  if (session) {
+    session.isTimerRunning = true
+    session.timerStartTime = Date.now()
+    saveWorkoutHistory(history)
+  }
+}
+
+// Stop/pause the workout timer
+export const stopWorkoutTimer = (sessionId: string): void => {
+  const history = loadWorkoutHistory()
+  const session = history.sessions.find(s => s.id === sessionId)
+
+  if (session && session.isTimerRunning && session.timerStartTime) {
+    const additionalTime = Math.floor((Date.now() - session.timerStartTime) / 1000)
+    session.timerElapsedSeconds += additionalTime
+    session.isTimerRunning = false
+    session.timerStartTime = undefined
+    saveWorkoutHistory(history)
+  }
+}
+
+// Get current timer state and elapsed time
+export const getTimerState = (sessionId: string): { isRunning: boolean; elapsedSeconds: number } => {
+  const history = loadWorkoutHistory()
+  const session = history.sessions.find(s => s.id === sessionId)
+
+  if (!session) {
+    return { isRunning: false, elapsedSeconds: 0 }
+  }
+
+  let elapsedSeconds = session.timerElapsedSeconds
+
+  if (session.isTimerRunning && session.timerStartTime) {
+    const additionalTime = Math.floor((Date.now() - session.timerStartTime) / 1000)
+    elapsedSeconds += additionalTime
+  }
+
+  return {
+    isRunning: session.isTimerRunning,
+    elapsedSeconds
+  }
+}
+
+// Get active (ongoing) workout session
+export const getActiveWorkoutSession = (): WorkoutSession | null => {
+  const history = loadWorkoutHistory()
+  const today = getTodayDate()
+
+  // Find an active session (started timer but not completed)
+  const activeSession = history.sessions.find(
+    s => s.date === today && !s.completed && (s.isTimerRunning || s.timerElapsedSeconds > 0)
+  )
+
+  return activeSession || null
+}
+
+// Update timer elapsed seconds (for real-time display)
+export const updateTimerElapsedSeconds = (sessionId: string): void => {
+  const history = loadWorkoutHistory()
+  const session = history.sessions.find(s => s.id === sessionId)
+
+  if (session && session.isTimerRunning && session.timerStartTime) {
+    const additionalTime = Math.floor((Date.now() - session.timerStartTime) / 1000)
+    session.timerElapsedSeconds += additionalTime
+    session.timerStartTime = Date.now()
+    saveWorkoutHistory(history)
+  }
 }

@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Smile, Frown, AlertTriangle, Trophy, Clock, Dumbbell } from 'lucide-react'
+import { Smile, Frown, AlertTriangle, Trophy, Clock, Dumbbell, Play, Timer } from 'lucide-react'
 import workoutData from '@/data/workouts.json'
 import { saveTodayFeeling, getTodayFeeling } from '@/utils/feelingStorage'
-import { getTodayCompletedWorkout, type WorkoutSession } from '@/utils/workoutStorage'
+import { getTodayCompletedWorkout, getActiveWorkoutSession, getTimerState, type WorkoutSession } from '@/utils/workoutStorage'
 
 type FeelingLevel = 'Good' | 'Sore' | 'Very sore'
 
@@ -18,6 +18,8 @@ export default function Home({ onWorkoutSelect }: HomeProps) {
   const [showFeedback, setShowFeedback] = useState(false)
   const [isSaved, setIsSaved] = useState(false)
   const [completedWorkout, setCompletedWorkout] = useState<WorkoutSession | null>(null)
+  const [activeWorkout, setActiveWorkout] = useState<WorkoutSession | null>(null)
+  const [activeElapsedTime, setActiveElapsedTime] = useState(0)
 
   useEffect(() => {
     const todayFeeling = getTodayFeeling()
@@ -31,7 +33,38 @@ export default function Home({ onWorkoutSelect }: HomeProps) {
     // Check for completed workout
     const todayWorkout = getTodayCompletedWorkout()
     setCompletedWorkout(todayWorkout)
+
+    // Check for active workout
+    const activeSession = getActiveWorkoutSession()
+    setActiveWorkout(activeSession)
   }, [])
+
+  // Update active workout timer
+  useEffect(() => {
+    if (activeWorkout) {
+      const updateTimer = () => {
+        const timerState = getTimerState(activeWorkout.id)
+        setActiveElapsedTime(timerState.elapsedSeconds)
+      }
+
+      // Update immediately
+      updateTimer()
+
+      // Set up interval for live updates
+      const interval = setInterval(updateTimer, 1000)
+      return () => clearInterval(interval)
+    }
+  }, [activeWorkout])
+
+  const formatTime = (seconds: number): string => {
+    const hours = Math.floor(seconds / 3600)
+    const minutes = Math.floor((seconds % 3600) / 60)
+    const secs = seconds % 60
+
+    return `${hours.toString().padStart(2, '0')}:${minutes
+      .toString()
+      .padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+  }
 
   const handleFeelingSelect = (feeling: FeelingLevel) => {
     setSelectedFeeling(feeling)
@@ -113,6 +146,42 @@ export default function Home({ onWorkoutSelect }: HomeProps) {
           )}
         </CardContent>
       </Card>
+
+      {activeWorkout && (
+        <>
+          <h2 className="text-2xl font-semibold mt-4 mb-4 text-blue-600 flex items-center gap-2">
+            <Timer className="h-6 w-6" />
+            Ongoing Workout
+          </h2>
+
+          <Card
+            className="cursor-pointer hover:shadow-md transition-shadow border-blue-200 bg-blue-50"
+            onClick={() => onWorkoutSelect(activeWorkout.workoutId)}
+          >
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center justify-between">
+                <span>
+                  {workoutData.workouts.find(w => w.id === activeWorkout.workoutId)?.name} Workout
+                </span>
+                <div className="flex items-center gap-2">
+                  <Play className="h-4 w-4 text-blue-600" />
+                  <span className="text-blue-600 font-mono text-lg">
+                    {formatTime(activeElapsedTime)}
+                  </span>
+                </div>
+              </CardTitle>
+              <div className="text-sm text-muted-foreground">
+                <span>Tap to continue your workout</span>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-sm text-blue-600 font-medium">
+                {activeWorkout.exercises.length} exercises completed
+              </div>
+            </CardContent>
+          </Card>
+        </>
+      )}
 
       {completedWorkout && (
         <>
