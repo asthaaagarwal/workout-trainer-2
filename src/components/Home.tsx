@@ -10,9 +10,10 @@ type FeelingLevel = 'Good' | 'Sore' | 'Very sore'
 
 interface HomeProps {
   onWorkoutSelect: (workoutId: string) => void
+  onCompletedWorkoutSelect: (session: WorkoutSession) => void
 }
 
-export default function Home({ onWorkoutSelect }: HomeProps) {
+export default function Home({ onWorkoutSelect, onCompletedWorkoutSelect }: HomeProps) {
   const [selectedFeeling, setSelectedFeeling] = useState<FeelingLevel | null>(null)
   const [feedback, setFeedback] = useState('')
   const [showFeedback, setShowFeedback] = useState(false)
@@ -190,7 +191,10 @@ export default function Home({ onWorkoutSelect }: HomeProps) {
             Workout completed for the day!
           </h2>
 
-          <Card>
+          <Card
+            className="cursor-pointer hover:shadow-md transition-shadow"
+            onClick={() => onCompletedWorkoutSelect(completedWorkout)}
+          >
             <CardHeader>
               <CardTitle className="text-lg">
                 {workoutData.workouts.find(w => w.id === completedWorkout.workoutId)?.name} Workout
@@ -233,7 +237,7 @@ export default function Home({ onWorkoutSelect }: HomeProps) {
       )}
 
       <h2 className="text-2xl font-semibold mt-4 mb-4">
-        {completedWorkout ? 'Start another workout' : 'Which workout do you want to do today?'}
+        {(activeWorkout || completedWorkout) ? 'Here\'s a list of other workouts' : 'Which workout do you want to do today?'}
       </h2>
 
       <div className="grid grid-cols-1 gap-4">

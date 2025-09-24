@@ -5,7 +5,11 @@ import { getAllFeelings } from '@/utils/feelingStorage'
 import workoutData from '@/data/workouts.json'
 import { Calendar as CalendarIcon, Clock, Dumbbell, Smile, Frown, AlertTriangle } from 'lucide-react'
 
-export default function Calendar() {
+interface CalendarProps {
+  onCompletedWorkoutSelect: (session: WorkoutSession) => void
+}
+
+export default function Calendar({ onCompletedWorkoutSelect }: CalendarProps) {
   const [dailyData, setDailyData] = useState<Record<string, {
     workouts: WorkoutSession[],
     feeling?: { feeling: string, feedback: string }
@@ -136,7 +140,11 @@ export default function Calendar() {
                   {dayData.workouts.length > 0 && (
                     <div className="space-y-2">
                       {dayData.workouts.map(session => (
-                        <div key={session.id} className="border-l-2 border-primary pl-3 space-y-1">
+                        <div
+                          key={session.id}
+                          className="border-l-2 border-primary pl-3 space-y-1 cursor-pointer hover:bg-gray-50 p-2 rounded-r-md transition-colors"
+                          onClick={() => onCompletedWorkoutSelect(session)}
+                        >
                           <p className="font-medium">{getWorkoutName(session.workoutId)} Workout</p>
                           <div className="flex items-center gap-4 text-sm text-muted-foreground">
                             <span className="flex items-center gap-1">

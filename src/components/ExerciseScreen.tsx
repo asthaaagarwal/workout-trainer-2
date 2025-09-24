@@ -1,10 +1,15 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { ArrowLeft, Plus, Trash2, Play, Video, X } from 'lucide-react'
+import { ArrowLeft, Plus, Trash2, Play, X } from 'lucide-react'
 import {
   saveExerciseData,
-  getExerciseData,
+  markExerciseComplete,
+  getTodayCompletedWorkout,
+  getActiveWorkoutSession,
+  getCurrentSessionExerciseData,
+  getPreviousWorkoutExerciseData,
+  updateExerciseDataInSession,
   type WorkoutSession
 } from '@/utils/workoutStorage'
 import workoutData from '@/data/workouts.json'
@@ -27,24 +32,51 @@ export default function ExerciseScreen({ exerciseName, session, onBack, onSave }
     { weight: '', reps: '' },
     { weight: '', reps: '' }
   ])
+  const [previousExerciseData, setPreviousExerciseData] = useState<ExerciseSet[]>([])
+  const [isEditable, setIsEditable] = useState(false)
+  const [isEditingCompleted, setIsEditingCompleted] = useState(false)
 
   // Get exercise metadata
   const exerciseMetadata = (workoutData as { exerciseMetadata?: Record<string, { type?: string; tips?: string[]; videoUrl?: string }> }).exerciseMetadata?.[exerciseName]
 
   useEffect(() => {
-    // Load previous data for this exercise
-    const previousData = getExerciseData(session.id, exerciseName)
-    if (previousData.length > 0) {
-      // Use data from current session or last workout of same type
-      setExerciseSets(previousData.map(set => ({
+    // Check if this is a completed workout
+    const isCompleted = session.completed
+    setIsEditingCompleted(isCompleted)
+
+    // Load current session data - for completed workouts, get existing exercise data
+    const currentSessionData = isCompleted
+      ? session.exercises.find(e => e.name === exerciseName)?.sets || []
+      : getCurrentSessionExerciseData(session.id, exerciseName)
+
+    // Load previous workout data for placeholder hints
+    const previousData = getPreviousWorkoutExerciseData(session.workoutId, exerciseName, session.id)
+    setPreviousExerciseData(previousData)
+
+    if (currentSessionData.length > 0) {
+      // Use current session data if it exists
+      setExerciseSets(currentSessionData.map(set => ({
         weight: set.weight || '',
         reps: set.reps || ''
       })))
     } else {
-      // No previous data found, use default 3 empty sets
-      setExerciseSets([{ weight: '', reps: '' }, { weight: '', reps: '' }, { weight: '', reps: '' }])
+      // Start with empty sets (previous data will show as placeholders only)
+      const numberOfSets = previousData.length > 0 ? previousData.length : 3
+      setExerciseSets(Array(numberOfSets).fill({ weight: '', reps: '' }))
     }
-  }, [session.id, exerciseName])
+  }, [session.id, session.workoutId, exerciseName, session.completed, session.exercises])
+
+  // Determine if this workout is editable
+  useEffect(() => {
+    const completedWorkout = getTodayCompletedWorkout()
+    const activeWorkout = getActiveWorkoutSession()
+
+    // Editable if this is the active workout OR if it's a completed workout (for editing completed data)
+    const editable = (activeWorkout?.id === session.id) ||
+                     (session.completed) ||
+                     (completedWorkout?.id === session.id)
+    setIsEditable(editable)
+  }, [session.id, session.completed])
 
   // Auto-save exercise data whenever sets change
   useEffect(() => {
@@ -65,11 +97,17 @@ export default function ExerciseScreen({ exerciseName, session, onBack, onSave }
         reps: typeof set.reps === 'number' ? set.reps : 0
       }))
 
-    // Only save if there are valid sets
-    if (setsToSave.length > 0) {
-      saveExerciseData(session.id, exerciseName, setsToSave)
+    // Only save if there are valid sets and the workout is editable
+    if (setsToSave.length > 0 && isEditable) {
+      if (isEditingCompleted) {
+        // Use the new function for completed workouts
+        updateExerciseDataInSession(session.id, exerciseName, setsToSave)
+      } else {
+        // Use the original function for active workouts
+        saveExerciseData(session.id, exerciseName, setsToSave)
+      }
     }
-  }, [exerciseSets, session.id, exerciseName, exerciseMetadata])
+  }, [exerciseSets, session.id, exerciseName, exerciseMetadata, isEditable, isEditingCompleted])
 
   const addSet = () => {
     setExerciseSets([...exerciseSets, { weight: '', reps: '' }])
@@ -107,8 +145,14 @@ export default function ExerciseScreen({ exerciseName, session, onBack, onSave }
         reps: typeof set.reps === 'number' ? set.reps : 0
       }))
 
-    // Save the exercise data
-    saveExerciseData(session.id, exerciseName, setsToSave)
+    if (isEditingCompleted) {
+      // For completed workouts, just save the data (auto-save already handles it)
+      updateExerciseDataInSession(session.id, exerciseName, setsToSave)
+    } else {
+      // For active workouts, save and mark as completed
+      saveExerciseData(session.id, exerciseName, setsToSave)
+      markExerciseComplete(session.id, exerciseName)
+    }
 
     // Navigate back and update the completed exercises
     onSave()
@@ -150,17 +194,6 @@ export default function ExerciseScreen({ exerciseName, session, onBack, onSave }
         </Card>
       )}
 
-      {exerciseMetadata?.videoUrl && (
-        <Card
-          className="mb-4 cursor-pointer hover:bg-accent/50 transition-colors"
-          onClick={() => window.open(exerciseMetadata.videoUrl, '_blank')}
-        >
-          <CardContent className="pt-0 flex items-center justify-center gap-2">
-            <Video className="h-4 w-4" />
-            <span className="text-sm font-medium">Watch video tutorial</span>
-          </CardContent>
-        </Card>
-      )}
 
         <div className="divide-y mb-4">
           {exerciseSets.map((set, index) => (
@@ -173,9 +206,16 @@ export default function ExerciseScreen({ exerciseName, session, onBack, onSave }
                       <input
                         type="number"
                         value={set.weight || ''}
-                        onChange={(e) => updateSet(index, 'weight', e.target.value === '' ? '' : parseInt(e.target.value) || 0)}
-                        className="w-20 pl-2 pr-8 py-1 text-sm border rounded text-left [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        placeholder="0"
+                        onChange={isEditable ? (e) => updateSet(index, 'weight', e.target.value === '' ? '' : parseInt(e.target.value) || 0) : undefined}
+                        disabled={!isEditable}
+                        className={`w-20 pl-2 pr-8 py-1 text-sm border rounded text-left [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                          !isEditable ? 'opacity-50 cursor-not-allowed bg-gray-50' : ''
+                        }`}
+                        placeholder={
+                          previousExerciseData[index]?.weight
+                            ? `${previousExerciseData[index].weight} kg (last time)`
+                            : "0"
+                        }
                       />
                       <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-gray-400 pointer-events-none">
                         kg
@@ -188,9 +228,16 @@ export default function ExerciseScreen({ exerciseName, session, onBack, onSave }
                   <input
                     type="number"
                     value={set.reps || ''}
-                    onChange={(e) => updateSet(index, 'reps', e.target.value === '' ? '' : parseInt(e.target.value) || 0)}
-                    className="w-20 pl-2 pr-8 py-1 text-sm border rounded text-left [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                    placeholder="0"
+                    onChange={isEditable ? (e) => updateSet(index, 'reps', e.target.value === '' ? '' : parseInt(e.target.value) || 0) : undefined}
+                    disabled={!isEditable}
+                    className={`w-20 pl-2 pr-8 py-1 text-sm border rounded text-left [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
+                      !isEditable ? 'opacity-50 cursor-not-allowed bg-gray-50' : ''
+                    }`}
+                    placeholder={
+                      previousExerciseData[index]?.reps
+                        ? `${previousExerciseData[index].reps} (last time)`
+                        : "0"
+                    }
                   />
                   <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-gray-400 pointer-events-none">
                     reps
@@ -198,10 +245,11 @@ export default function ExerciseScreen({ exerciseName, session, onBack, onSave }
                 </div>
               </div>
               <Button
-                onClick={() => removeSet(index)}
+                onClick={isEditable ? () => removeSet(index) : undefined}
+                disabled={!isEditable}
                 variant="outline"
                 size="icon"
-                className="h-8 w-8"
+                className={`h-8 w-8 ${!isEditable ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
@@ -210,9 +258,12 @@ export default function ExerciseScreen({ exerciseName, session, onBack, onSave }
         </div>
 
         <Button
-          onClick={addSet}
+          onClick={isEditable ? addSet : undefined}
+          disabled={!isEditable}
           variant="outline"
-          className="w-full mb-4 flex items-center justify-center gap-2"
+          className={`w-full mb-4 flex items-center justify-center gap-2 ${
+            !isEditable ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
         >
           <Plus className="h-4 w-4" />
           Add Set
@@ -220,9 +271,23 @@ export default function ExerciseScreen({ exerciseName, session, onBack, onSave }
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 p-4 bg-background border-t">
-        <Button onClick={handleSaveExercise} className="w-full">
-          Done
+        <Button
+          onClick={isEditable ? handleSaveExercise : undefined}
+          disabled={!isEditable}
+          className={`w-full ${!isEditable ? 'opacity-50 cursor-not-allowed' : ''}`}
+        >
+          {isEditingCompleted ? 'Save Changes' : 'Done'}
         </Button>
+        {!isEditable && (
+          <p className="text-xs text-muted-foreground mt-2 text-center">
+            This workout is not currently active - you can only edit ongoing workouts
+          </p>
+        )}
+        {isEditingCompleted && isEditable && (
+          <p className="text-xs text-muted-foreground mt-2 text-center">
+            Changes are saved automatically as you type
+          </p>
+        )}
       </div>
     </div>
   )

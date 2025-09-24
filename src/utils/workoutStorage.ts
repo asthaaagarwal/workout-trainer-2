@@ -107,12 +107,12 @@ export const saveExerciseData = (
     // Remove existing exercise data if it exists
     session.exercises = session.exercises.filter(e => e.name !== exerciseName)
 
-    // Add new exercise data
+    // Add new exercise data (but don't automatically mark as completed)
     if (sets.length > 0 && sets.some(set => set.weight > 0 || set.reps > 0)) {
       session.exercises.push({
         name: exerciseName,
         sets: sets.filter(set => set.weight > 0 || set.reps > 0),
-        completed: true
+        completed: false
       })
     }
 
@@ -151,6 +151,64 @@ export const getExerciseData = (
   return []
 }
 
+// Get exercise data from current session only (no fallback to previous workouts)
+export const getCurrentSessionExerciseData = (
+  sessionId: string,
+  exerciseName: string
+): ExerciseSet[] => {
+  const history = loadWorkoutHistory()
+  const session = history.sessions.find(s => s.id === sessionId)
+
+  if (session) {
+    const exercise = session.exercises.find(e => e.name === exerciseName)
+    if (exercise) {
+      return exercise.sets
+    }
+  }
+
+  return []
+}
+
+// Get exercise data from previous completed workout (reference data for placeholders)
+export const getPreviousWorkoutExerciseData = (
+  workoutId: string,
+  exerciseName: string,
+  excludeSessionId: string
+): ExerciseSet[] => {
+  const history = loadWorkoutHistory()
+
+  // Find the most recent completed workout of the same type (excluding current session)
+  const lastCompletedSession = history.sessions
+    .filter(s => s.id !== excludeSessionId && s.workoutId === workoutId && s.completed)
+    .sort((a, b) => b.startTime - a.startTime)[0]
+
+  if (lastCompletedSession) {
+    const lastExercise = lastCompletedSession.exercises.find(e => e.name === exerciseName)
+    if (lastExercise) {
+      return lastExercise.sets
+    }
+  }
+
+  return []
+}
+
+// Mark a specific exercise as completed
+export const markExerciseComplete = (
+  sessionId: string,
+  exerciseName: string
+): void => {
+  const history = loadWorkoutHistory()
+  const session = history.sessions.find(s => s.id === sessionId)
+
+  if (session) {
+    const exercise = session.exercises.find(e => e.name === exerciseName)
+    if (exercise) {
+      exercise.completed = true
+      saveWorkoutHistory(history)
+    }
+  }
+}
+
 // Complete a workout session
 export const completeWorkoutSession = (sessionId: string): void => {
   const history = loadWorkoutHistory()
@@ -179,7 +237,19 @@ export const getCompletedExercises = (sessionId: string): string[] => {
   const session = history.sessions.find(s => s.id === sessionId)
 
   if (session) {
-    return session.exercises.map(e => e.name)
+    return session.exercises.filter(e => e.completed).map(e => e.name)
+  }
+
+  return []
+}
+
+// Get exercises that have data but are not marked as completed
+export const getExercisesWithData = (sessionId: string): string[] => {
+  const history = loadWorkoutHistory()
+  const session = history.sessions.find(s => s.id === sessionId)
+
+  if (session) {
+    return session.exercises.filter(e => !e.completed && e.sets.length > 0).map(e => e.name)
   }
 
   return []
@@ -268,6 +338,38 @@ export const updateTimerElapsedSeconds = (sessionId: string): void => {
     const additionalTime = Math.floor((Date.now() - session.timerStartTime) / 1000)
     session.timerElapsedSeconds += additionalTime
     session.timerStartTime = Date.now()
+    saveWorkoutHistory(history)
+  }
+}
+
+// Get specific workout session by ID (for editing completed workouts)
+export const getWorkoutSessionById = (sessionId: string): WorkoutSession | null => {
+  const history = loadWorkoutHistory()
+  return history.sessions.find(s => s.id === sessionId) || null
+}
+
+// Update exercise data in a specific session (for editing completed workouts)
+export const updateExerciseDataInSession = (
+  sessionId: string,
+  exerciseName: string,
+  sets: ExerciseSet[]
+): void => {
+  const history = loadWorkoutHistory()
+  const session = history.sessions.find(s => s.id === sessionId)
+
+  if (session) {
+    // Remove existing exercise data if it exists
+    session.exercises = session.exercises.filter(e => e.name !== exerciseName)
+
+    // Add new exercise data if there are valid sets
+    if (sets.length > 0 && sets.some(set => set.weight > 0 || set.reps > 0)) {
+      session.exercises.push({
+        name: exerciseName,
+        sets: sets.filter(set => set.weight > 0 || set.reps > 0),
+        completed: true // Mark as completed for edited completed workouts
+      })
+    }
+
     saveWorkoutHistory(history)
   }
 }

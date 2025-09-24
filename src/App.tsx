@@ -15,14 +15,23 @@ function App() {
   const [currentSession, setCurrentSession] = useState<WorkoutSession | null>(null)
   const [refreshKey, setRefreshKey] = useState(0)
   const [congratsData, setCongratsData] = useState({ duration: '00:00:00', exercises: 0 })
+  const [editingCompletedSession, setEditingCompletedSession] = useState<WorkoutSession | null>(null)
 
   const handleWorkoutSelect = (workoutId: string) => {
     setSelectedWorkout(workoutId)
+    setEditingCompletedSession(null)
+    setCurrentPage('workout')
+  }
+
+  const handleCompletedWorkoutSelect = (session: WorkoutSession) => {
+    setSelectedWorkout(session.workoutId)
+    setEditingCompletedSession(session)
     setCurrentPage('workout')
   }
 
   const handleBack = () => {
     setCurrentPage('home')
+    setEditingCompletedSession(null)
     setRefreshKey(prev => prev + 1) // Force refresh to check for completed workout
   }
 
@@ -53,12 +62,13 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col">
       <main className={`flex-1 ${currentPage !== 'exercise' ? 'pb-16' : ''}`}>
-        {currentPage === 'home' && <Home key={refreshKey} onWorkoutSelect={handleWorkoutSelect} />}
-        {currentPage === 'calendar' && <Calendar />}
+        {currentPage === 'home' && <Home key={refreshKey} onWorkoutSelect={handleWorkoutSelect} onCompletedWorkoutSelect={handleCompletedWorkoutSelect} />}
+        {currentPage === 'calendar' && <Calendar onCompletedWorkoutSelect={handleCompletedWorkoutSelect} />}
         {currentPage === 'stats' && <Stats />}
         {currentPage === 'workout' && (
           <Workout
             workoutId={selectedWorkout}
+            editingSession={editingCompletedSession}
             onBack={handleBack}
             onCongratulations={handleCongratulations}
             onExerciseSelect={handleExerciseSelect}
