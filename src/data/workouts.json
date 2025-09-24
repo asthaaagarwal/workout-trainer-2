@@ -13,7 +13,7 @@
         "Chest press",
         "Back squats",
         "Bent over rows",
-        "Single leg deadlift",
+        "Single leg extension",
         "Push ups",
         "Side lunge"
       ],
@@ -88,15 +88,6 @@
       ]
     },
     "Push ups": {
-      "type": "bodyweight",
-      "videoUrl": "https://www.youtube.com/watch?v=KEFQyLkDYtI",
-      "tips": [
-        "Keep your body in a straight line from head to heels",
-        "Lower your chest until elbows are at 90 degrees",
-        "Engage your core throughout the movement"
-      ]
-    },
-    "Push-ups": {
       "type": "bodyweight",
       "videoUrl": "https://www.youtube.com/watch?v=KEFQyLkDYtI",
       "tips": [
@@ -228,7 +219,7 @@
       ]
     },
     "Hip thrust": {
-      "type": "bodyweight",
+      "type": "weighted",
       "videoUrl": "https://www.youtube.com/watch?v=awBS7K71l8",
       "tips": [
         "Drive through heels",
@@ -237,7 +228,7 @@
       ]
     },
     "Single leg extension": {
-      "type": "bodyweight",
+      "type": "weighted",
       "videoUrl": "https://www.youtube.com/watch?v=82IuSLk5zNc",
       "tips": [
         "Keep core engaged for stability",
@@ -246,7 +237,7 @@
       ]
     },
     "Side lunge": {
-      "type": "bodyweight",
+      "type": "weighted",
       "tips": [
         "Keep chest up and back straight",
         "Push hips back as you lunge",
@@ -275,14 +266,6 @@
         "Keep legs as straight as possible",
         "Walk hands out to plank position",
         "Maintain tight core throughout"
-      ]
-    },
-    "Single leg deadlift": {
-      "type": "bodyweight",
-      "tips": [
-        "Keep hips square to the ground",
-        "Hinge at the hips",
-        "Keep standing leg slightly bent"
       ]
     },
     "Leg raises": {
