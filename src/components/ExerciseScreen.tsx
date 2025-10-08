@@ -205,15 +205,16 @@ export default function ExerciseScreen({ exerciseName, session, onBack, onSave }
                     <div className="relative">
                       <input
                         type="number"
+                        step="0.1"
                         value={set.weight || ''}
-                        onChange={isEditable ? (e) => updateSet(index, 'weight', e.target.value === '' ? '' : parseInt(e.target.value) || 0) : undefined}
+                        onChange={isEditable ? (e) => updateSet(index, 'weight', e.target.value === '' ? '' : parseFloat(e.target.value) || 0) : undefined}
                         disabled={!isEditable}
                         className={`w-20 pl-2 pr-8 py-1 text-sm border rounded text-left [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${
                           !isEditable ? 'opacity-50 cursor-not-allowed bg-gray-50' : ''
                         }`}
                         placeholder={
                           previousExerciseData[index]?.weight
-                            ? `${previousExerciseData[index].weight} kg (last time)`
+                            ? `${previousExerciseData[index].weight}`
                             : "0"
                         }
                       />
@@ -235,7 +236,7 @@ export default function ExerciseScreen({ exerciseName, session, onBack, onSave }
                     }`}
                     placeholder={
                       previousExerciseData[index]?.reps
-                        ? `${previousExerciseData[index].reps} (last time)`
+                        ? `${previousExerciseData[index].reps}`
                         : "0"
                     }
                   />

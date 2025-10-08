@@ -373,3 +373,14 @@ export const updateExerciseDataInSession = (
     saveWorkoutHistory(history)
   }
 }
+
+// Delete a workout session
+export const deleteWorkoutSession = (sessionId: string): void => {
+  const history = loadWorkoutHistory()
+
+  // Filter out the session to delete
+  history.sessions = history.sessions.filter(session => session.id !== sessionId)
+
+  // Save updated history
+  saveWorkoutHistory(history)
+}

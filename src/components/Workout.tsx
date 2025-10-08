@@ -2,14 +2,15 @@ import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import { ArrowLeft, Check, Timer, Circle } from 'lucide-react'
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
+import { ArrowLeft, Check, Timer, Circle, Trash2 } from 'lucide-react'
+import { toast } from 'sonner'
 import workoutData from '@/data/workouts.json'
 import {
   getOrCreateSession,
@@ -22,6 +23,7 @@ import {
   getTodayCompletedWorkout,
   getActiveWorkoutSession,
   getWorkoutSessionById,
+  deleteWorkoutSession,
   type WorkoutSession,
   type ExerciseData
 } from '@/utils/workoutStorage'
@@ -41,7 +43,8 @@ export default function Workout({ workoutId, editingSession, onBack, onCongratul
   const [exercisesWithData, setExercisesWithData] = useState<string[]>([])
   const [isTimerRunning, setIsTimerRunning] = useState(false)
   const [elapsedTime, setElapsedTime] = useState(0)
-  const [showEndDialog, setShowEndDialog] = useState(false)
+  const [showEndSheet, setShowEndSheet] = useState(false)
+  const [showDeleteSheet, setShowDeleteSheet] = useState(false)
   const [canStartWorkout, setCanStartWorkout] = useState(true)
   const [isEditingCompleted, setIsEditingCompleted] = useState(false)
   const [completedSessionData, setCompletedSessionData] = useState<ExerciseData[]>([])
@@ -158,9 +161,20 @@ export default function Workout({ workoutId, editingSession, onBack, onCongratul
       completeWorkoutSession(currentSession.id)
     }
     setIsTimerRunning(false)
-    setShowEndDialog(false)
+    setShowEndSheet(false)
     // Navigate to congratulations screen
     onCongratulations(formatTime(elapsedTime), completedExercises.length)
+  }
+
+  const handleDeleteWorkout = () => {
+    if (currentSession) {
+      deleteWorkoutSession(currentSession.id)
+      setShowDeleteSheet(false)
+      // Show toast message
+      toast.success('Workout deleted')
+      // Navigate back to refresh the parent state
+      onBack()
+    }
   }
 
   if (!workout) {
@@ -244,7 +258,7 @@ export default function Workout({ workoutId, editingSession, onBack, onCongratul
             </p>
           </div>
           <Button
-            onClick={() => setShowEndDialog(true)}
+            onClick={() => setShowEndSheet(true)}
             variant="destructive"
             className="w-full"
           >
@@ -326,7 +340,7 @@ export default function Workout({ workoutId, editingSession, onBack, onCongratul
           </CardContent>
         </Card>
 
-        {completedExercises.length > 0 && (
+        {!isEditingCompleted && completedExercises.length > 0 && (
           <div className="mt-6">
             <Button
               onClick={handleCompleteWorkout}
@@ -337,27 +351,59 @@ export default function Workout({ workoutId, editingSession, onBack, onCongratul
             </Button>
           </div>
         )}
+
+        {isEditingCompleted && (
+          <div className="mt-6 mb-6">
+            <Button
+              onClick={() => setShowDeleteSheet(true)}
+              className="w-full"
+              variant="destructive"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete Workout
+            </Button>
+          </div>
+        )}
       </div>
 
 
-      <Dialog open={showEndDialog} onOpenChange={setShowEndDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>End Workout?</DialogTitle>
-            <DialogDescription>
+      <Sheet open={showEndSheet} onOpenChange={setShowEndSheet}>
+        <SheetContent side="bottom">
+          <SheetHeader>
+            <SheetTitle>End Workout?</SheetTitle>
+            <SheetDescription>
               Are you sure you want to end the workout? Your progress will be saved.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowEndDialog(false)}>
+            </SheetDescription>
+          </SheetHeader>
+          <SheetFooter className="pt-6 gap-3">
+            <Button variant="outline" onClick={() => setShowEndSheet(false)} className="flex-1">
               Cancel
             </Button>
-            <Button variant="destructive" onClick={handleEndWorkout}>
+            <Button variant="destructive" onClick={handleEndWorkout} className="flex-1">
               End Workout
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+
+      <Sheet open={showDeleteSheet} onOpenChange={setShowDeleteSheet}>
+        <SheetContent side="bottom">
+          <SheetHeader>
+            <SheetTitle>Delete Workout</SheetTitle>
+            <SheetDescription>
+              Are you sure you want to delete this workout? This action cannot be undone and all your exercise data will be permanently lost.
+            </SheetDescription>
+          </SheetHeader>
+          <SheetFooter className="pt-6 gap-3">
+            <Button variant="outline" onClick={() => setShowDeleteSheet(false)} className="flex-1">
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteWorkout} className="flex-1">
+              Delete
+            </Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }

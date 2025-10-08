@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Home as HomeIcon, Calendar as CalendarIcon, BarChart3 } from 'lucide-react'
+import { Toaster } from '@/components/ui/sonner'
 import Home from '@/components/Home'
 import Calendar from '@/components/Calendar'
 import Workout from '@/components/Workout'
@@ -132,6 +133,7 @@ function App() {
           </div>
         </nav>
       )}
+      <Toaster />
     </div>
   )
 }
