@@ -3,6 +3,7 @@ const STORAGE_KEY = 'workout-trainer-sessions'
 export interface ExerciseSet {
   weight: number
   reps: number
+  seconds?: number
 }
 
 export interface ExerciseData {
@@ -27,6 +28,10 @@ export interface WorkoutSession {
 
 export interface WorkoutHistory {
   sessions: WorkoutSession[]
+}
+
+const hasExerciseData = (set: ExerciseSet): boolean => {
+  return set.weight > 0 || set.reps > 0 || (set.seconds ?? 0) > 0
 }
 
 // Get today's date in YYYY-MM-DD format (in local timezone)
@@ -108,10 +113,10 @@ export const saveExerciseData = (
     session.exercises = session.exercises.filter(e => e.name !== exerciseName)
 
     // Add new exercise data (but don't automatically mark as completed)
-    if (sets.length > 0 && sets.some(set => set.weight > 0 || set.reps > 0)) {
+    if (sets.length > 0 && sets.some(hasExerciseData)) {
       session.exercises.push({
         name: exerciseName,
-        sets: sets.filter(set => set.weight > 0 || set.reps > 0),
+        sets: sets.filter(hasExerciseData),
         completed: false
       })
     }
@@ -362,10 +367,10 @@ export const updateExerciseDataInSession = (
     session.exercises = session.exercises.filter(e => e.name !== exerciseName)
 
     // Add new exercise data if there are valid sets
-    if (sets.length > 0 && sets.some(set => set.weight > 0 || set.reps > 0)) {
+    if (sets.length > 0 && sets.some(hasExerciseData)) {
       session.exercises.push({
         name: exerciseName,
-        sets: sets.filter(set => set.weight > 0 || set.reps > 0),
+        sets: sets.filter(hasExerciseData),
         completed: true // Mark as completed for edited completed workouts
       })
     }

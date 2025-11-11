@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Smile, Frown, AlertTriangle, Trophy, Clock, Dumbbell, Play, Timer } from 'lucide-react'
 import workoutData from '@/data/workouts.json'
 import { saveTodayFeeling, getTodayFeeling } from '@/utils/feelingStorage'
+import { formatExerciseSet } from '@/utils/exerciseFormat'
 import { getTodayCompletedWorkout, getActiveWorkoutSession, getTimerState, type WorkoutSession } from '@/utils/workoutStorage'
 
 type FeelingLevel = 'Good' | 'Sore' | 'Very sore'
@@ -224,7 +225,7 @@ export default function Home({ onWorkoutSelect, onCompletedWorkoutSelect }: Home
                     <div className="text-xs text-muted-foreground space-x-3">
                       {exercise.sets.map((set, setIndex) => (
                         <span key={setIndex}>
-                          Set {setIndex + 1}: {set.weight > 0 ? `${set.weight}kg × ` : ''}{set.reps} reps
+                          {formatExerciseSet(set, setIndex)}
                         </span>
                       ))}
                     </div>

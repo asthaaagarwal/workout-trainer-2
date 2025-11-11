@@ -35,16 +35,16 @@
       ],
       "mainExercises": [
         "Push ups",
-        "Chest press",
         "Supermans",
+        "Chest press",
         "Seated rows",
         "Shoulder press",
         "Bicep curls",
-        "Tricep curls"
+        "Tricep curls",
+        "Plank",
+        "Side plank"
       ],
       "cooldown": [
-        "Plank",
-        "Side plank",
         "Full body stretches",
         "Cat cow",
         "Spinal twist"
@@ -243,7 +243,7 @@
       ]
     },
     "Plank": {
-      "type": "bodyweight",
+      "type": "timed",
       "tips": [
         "Keep your body in a straight line",
         "Don't let your hips sag or pike up",
@@ -432,7 +432,7 @@
       ]
     },
     "Side plank": {
-      "type": "bodyweight",
+      "type": "timed",
       "tips": [
         "Keep lower back pressed to floor",
         "Lower legs slowly with control",
@@ -448,7 +448,7 @@
       ]
     },
     "Supermans": {
-      "type": "bodyweight",
+      "type": "timed",
       "tips": [
         "Keep lower back pressed to floor",
         "Lower legs slowly with control",

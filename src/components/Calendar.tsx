@@ -4,6 +4,7 @@ import { loadWorkoutHistory, type WorkoutSession } from '@/utils/workoutStorage'
 import { getAllFeelings } from '@/utils/feelingStorage'
 import workoutData from '@/data/workouts.json'
 import { Calendar as CalendarIcon, Clock, Dumbbell, Smile, Frown, AlertTriangle } from 'lucide-react'
+import { formatExerciseSet } from '@/utils/exerciseFormat'
 
 interface CalendarProps {
   onCompletedWorkoutSelect: (session: WorkoutSession) => void
@@ -169,7 +170,7 @@ export default function Calendar({ onCompletedWorkoutSelect }: CalendarProps) {
                                 {exercise.sets.map((set, setIdx) => (
                                   <span key={setIdx}>
                                     {setIdx > 0 && ', '}
-                                    {set.weight}kg × {set.reps}
+                                    {formatExerciseSet(set, setIdx)}
                                   </span>
                                 ))}
                               </div>
