@@ -1,6 +1,81 @@
 {
   "workouts": [
     {
+      "id": "lower-body-new",
+      "name": "Lower Body New",
+      "description": "Complete workout for lower body. Updated on 11 Nov 2025",
+      "warmup": [
+        "Dead bug",
+        "Shoulder tap",
+        "Bodyweight squats"
+      ],
+      "mainExercises": [
+        "Back squats",
+        "Deadlift",
+        "Leg press",
+        "Hamstring curls",
+        "Calf raises",
+        "Side walks"
+      ],
+      "cooldown": [
+        "Bicycle crunches",
+        "Russian twists",
+        "Full body stretches",
+        "Calf stretches",
+        "Ankle mobility stretch"
+      ]
+    },
+    {
+      "id": "upper-body-new",
+      "name": "Upper Body New",
+      "description": "Complete workout for upper body. Updated on 11 Nov 2025",
+      "warmup": [
+        "Dead bug",
+        "Shoulder tap",
+        "Push ups"
+      ],
+      "mainExercises": [
+        "Chest press",
+        "Supermans",
+        "Seated rows",
+        "Shoulder press",
+        "Bicep curls",
+        "Tricep curls"
+      ],
+      "cooldown": [
+        "Plank",
+        "Side plank",
+        "Full body stretches",
+        "Cat cow",
+        "Spinal twist"
+      ]
+    },
+    {
+      "id": "full-body-new",
+      "name": "Full body new",
+      "description": "Complete workout for all muscle groups updated on 11 Nov 2025",
+      "warmup": [
+        "Dead bug",
+        "Shoulder tap",
+        "Hand walks"
+      ],
+      "mainExercises": [
+        "Chest press",
+        "Back squats",
+        "Seated rows",
+        "Calf raises",
+        "Supermans",
+        "Hip thrust"
+      ],
+      "cooldown": [
+        "Crunches",
+        "Russian twists",
+        "Full body stretches",
+        "Ankle mobility stretch",
+        "Spinal twist"
+      ]
+    },
+    {
       "id": "full-body",
       "name": "Full body",
       "description": "Complete workout for all muscle groups",
@@ -117,6 +192,14 @@
     "Bent over rows": {
       "type": "weighted",
       "videoUrl": "https://www.youtube.com/watch?v=3_RR7ELmcAk",
+      "tips": [
+        "Keep back straight and core engaged",
+        "Pull weights to your sides",
+        "Squeeze shoulder blades together at the top"
+      ]
+    },
+    "Seated rows": {
+      "type": "weighted",
       "tips": [
         "Keep back straight and core engaged",
         "Pull weights to your sides",
@@ -269,6 +352,102 @@
       ]
     },
     "Leg raises": {
+      "type": "bodyweight",
+      "tips": [
+        "Keep lower back pressed to floor",
+        "Lower legs slowly with control",
+        "Don't let feet touch the ground between reps"
+      ]
+    },
+    "Leg press": {
+      "type": "weighted",
+      "tips": [
+        "Keep lower back pressed to floor",
+        "Lower legs slowly with control",
+        "Don't let feet touch the ground between reps"
+      ]
+    },
+    "Hamstring curls": {
+      "type": "weighted",
+      "tips": [
+        "Keep lower back pressed to floor",
+        "Lower legs slowly with control",
+        "Don't let feet touch the ground between reps"
+      ]
+    },
+    "Calf raises": {
+      "type": "weighted",
+      "tips": [
+        "Keep lower back pressed to floor",
+        "Lower legs slowly with control",
+        "Don't let feet touch the ground between reps"
+      ]
+    },
+    "Side walks": {
+      "type": "bodyweight",
+      "tips": [
+        "Keep lower back pressed to floor",
+        "Lower legs slowly with control",
+        "Don't let feet touch the ground between reps"
+      ]
+    },
+    "Full body stretches": {
+      "type": "bodyweight",
+      "tips": [
+        "Keep lower back pressed to floor",
+        "Lower legs slowly with control",
+        "Don't let feet touch the ground between reps"
+      ]
+    },
+    "Calf stretches": {
+      "type": "bodyweight",
+      "tips": [
+        "Keep lower back pressed to floor",
+        "Lower legs slowly with control",
+        "Don't let feet touch the ground between reps"
+      ]
+    },
+    "Ankle mobility": {
+      "type": "bodyweight",
+      "tips": [
+        "Keep lower back pressed to floor",
+        "Lower legs slowly with control",
+        "Don't let feet touch the ground between reps"
+      ]
+    },
+    "Cat cow": {
+      "type": "bodyweight",
+      "tips": [
+        "Keep lower back pressed to floor",
+        "Lower legs slowly with control",
+        "Don't let feet touch the ground between reps"
+      ]
+    },
+    "Spinal twist": {
+      "type": "bodyweight",
+      "tips": [
+        "Keep lower back pressed to floor",
+        "Lower legs slowly with control",
+        "Don't let feet touch the ground between reps"
+      ]
+    },
+    "Side plank": {
+      "type": "bodyweight",
+      "tips": [
+        "Keep lower back pressed to floor",
+        "Lower legs slowly with control",
+        "Don't let feet touch the ground between reps"
+      ]
+    },
+    "Crunches": {
+      "type": "bodyweight",
+      "tips": [
+        "Keep lower back pressed to floor",
+        "Lower legs slowly with control",
+        "Don't let feet touch the ground between reps"
+      ]
+    },
+    "Supermans": {
       "type": "bodyweight",
       "tips": [
         "Keep lower back pressed to floor",
