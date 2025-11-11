@@ -2,8 +2,8 @@
   "workouts": [
     {
       "id": "lower-body-new",
-      "name": "Lower Body New",
-      "description": "Complete workout for lower body. Updated on 11 Nov 2025",
+      "name": "Lower body [New]",
+      "description": "Focus on lower body. Updated on 11 Nov 2025",
       "warmup": [
         "Dead bug",
         "Shoulder tap",
@@ -27,14 +27,14 @@
     },
     {
       "id": "upper-body-new",
-      "name": "Upper Body New",
-      "description": "Complete workout for upper body. Updated on 11 Nov 2025",
+      "name": "Upper body [New]",
+      "description": "Focus on upper body. Updated on 11 Nov 2025",
       "warmup": [
         "Dead bug",
-        "Shoulder tap",
-        "Push ups"
+        "Shoulder tap"
       ],
       "mainExercises": [
+        "Push ups",
         "Chest press",
         "Supermans",
         "Seated rows",
@@ -52,8 +52,8 @@
     },
     {
       "id": "full-body-new",
-      "name": "Full body new",
-      "description": "Complete workout for all muscle groups updated on 11 Nov 2025",
+      "name": "Full body [New]",
+      "description": "Focus on all muscle groups. Updated on 11 Nov 2025",
       "warmup": [
         "Dead bug",
         "Shoulder tap",
